@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Latest Space News</title>
+</head>
+<body>
+    <h1>Latest Space News</h1>
+    <div class="buttons">
+        <a href="/?filter=black_holes" class="button">Black Holes</a>
+        <a href="/?filter=mars" class="button">Mars</a>
+        <a href="/" class="button">All News</a>
+    </div>
+
+    <div class="articles-container">
+        {% if current_page == 1 %}
+            <div class="newest-article">
+                {% if articles %}
+            <a class="article-link" href="{{ articles[-1].link }}" target="_blank">
+                <div class="article-card wide">
+                    <div><img src="{{ articles[-1].image_url }}" alt="Article Image"></div>
+                    <div>
+                        <h2>{{ articles[-1].title }}</h2>
+                        <div class="info">
+                            <p class="source">{{ articles[-1].date_scraped.strftime('%B %d, %Y') }}</p>
+                            <p class="source">{{ articles[-1].source }}</p>
+                        </div>
+                        <p class="summary">{{ articles[-1].summary }}</p>
+                    </div>
+                </div>
+            </a>
+                 
+      
+                {% endif %}
+            </div>
+        {% endif %}
+       
+        <div class="other-articles">
+            {% if current_page == 1 %}
+
+                {% if articles|length > 1 %}
+                    {% for article in articles[-4:-1] %}
+                    <a class="article-link" href="{{ article.link }}" target="_blank">
+                        <div class="article-card">
+                            <div class="img-container"><img src="{{ article.image_url }}" alt="Article Image"></div>
+                            <div class="content">
+                                <h2>{{ article.title }}</h2>
+                                <div class="info">
+                                    <p class="source">{{ article.date_scraped.strftime('%B %d, %Y') }}</p>
+                                    <p class="source">{{ article.source }}</p>
+                                </div>
+
+                                <p>{{ article.summary }}</p>
+                              
+                            </div>
+                        </div>
+                       </a>
+                    {% endfor %}
+                {% endif %}
+                    
+            {% endif %}
+           
+        </div>
+    </div>
+
+       
+        </div>
+        <div class="row">
+            {% if current_page == 1 %}
+                {% if articles|length > 4 %}
+                    {% for article in articles[:-4]|reverse %} 
+                    <a class="article-link" href="{{ article.link }}" target="_blank">
+                        <div class="article-card">
+                            <div class="row-img-container">
+                                <img src="{{ article.image_url }}" alt="Article Image">
+                            </div>
+                            <div class="content">
+                                <h2>{{ article.title }}</h2>
+                                <div class="info">
+                                    <p class="source">{{ article.date_scraped.strftime('%B %d, %Y') }}</p>
+                                    <p class="source">{{ article.source }}</p>
+                                </div>
+                                <p>{{ article.summary }}</p>
+                              
+                            </div>
+                        </div>
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                {% for article in articles %}
+                    <a class="article-link" href="{{ article.link }}" target="_blank">
+                        <div class="article-card">
+                            <div class="row-img-container"><img src="{{ article.image_url }}" alt="Article Image"></div>
+                            <div class="content">
+                                <h2>{{ article.title }}</h2>
+                                <div class="info">
+                                    <p class="source">{{ article.date_scraped.strftime('%B %d, %Y') }}</p>
+                                    <p class="source">{{ article.source }}</p>
+                                </div>
+                                <p>{{ article.summary }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+</div>
+    
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        {% if pagination.has_prev %}
+            <a href="{{ url_for('index', page=pagination.prev_num, filter=request.args.get('filter')) }}">&laquo; Previous</a>
+        {% endif %}
+        
+        {% for page_num in pagination.iter_pages() %}
+            <a href="{{ url_for('index', page=page_num, filter=request.args.get('filter')) }}" class="{{ 'active' if page_num == pagination.page else '' }}">{{ page_num }}</a>
+        {% endfor %}
+
+        {% if pagination.has_next %}
+            <a href="{{ url_for('index', page=pagination.next_num, filter=request.args.get('filter')) }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+
+
+</body>
+
