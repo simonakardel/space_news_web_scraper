@@ -1,8 +1,7 @@
 :root {
-    --secondary-color: #808080;
-    --text-color: #2F2F2F;
+    --text-color: #5D5D5D;
     --link-color: black;
-    --hover-color: grey;
+    --hover-color: #5D5D5D;
     --background-image: url('../images/Cosmo125.png');
 }
 
@@ -29,7 +28,7 @@ h1 {
 
 p {
     line-height: 150%;
-    color: var(--secondary-color);
+    color: var(--text-color);
 }
 
 a {
