@@ -1,21 +1,25 @@
 import sys
+import logging
 from os.path import dirname, abspath
 
 scraper_dir = dirname(abspath(__file__))
-
 project_dir = dirname(scraper_dir)
-
 sys.path.append(project_dir)
 
-
 from scraper.utilities import fetch_page, categorize_article
-from app.models import Article
+from app.models import Article, db
 from datetime import datetime
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://science.nasa.gov"
 
 def is_absolute_url(url):
     return url.startswith('http://') or url.startswith('https://')
+
+def article_exists(link):
+    return db.session.query(Article).filter_by(link=link).first() is not None
 
 def scrape_nasa_articles():
     url = BASE_URL + '/mars/stories/'
@@ -39,11 +43,26 @@ def scrape_nasa_articles():
                 summary = summary_tag.get_text(strip=True) if summary_tag else None
 
                 date_scraped = datetime.now().date()
+
                 if title and link and image_url:
                     categories = categorize_article(title, summary)
-                    new_article = Article(title=title, link=link, summary=summary, image_url=image_url, categories=categories, source="NASA", date_scraped=date_scraped)
-                    articles.append(new_article)
+                    
+                    if not article_exists(link):
+                        new_article = Article(
+                            title=title, 
+                            link=link, 
+                            summary=summary, 
+                            image_url=image_url, 
+                            categories=categories, 
+                            source="NASA", 
+                            date_scraped=date_scraped
+                        )
+                        articles.append(new_article)
+                        logger.info(f"Added new article: {title}")
+                    else:
+                        logger.info(f"Article with link {link} already exists. Skipping.")
             except Exception as e:
-                print(f"Error processing article: {e}")
+                logger.error(f"Error processing article: {e}")
 
     return articles
+

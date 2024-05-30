@@ -38,8 +38,6 @@ def init_scheduler(app):
     """
     Initializes and starts the background scheduler for scraping.
 
-    Args:
-        app (Flask): The Flask application instance.
     """
     scheduler = BackgroundScheduler(daemon=True)
 
