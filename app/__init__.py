@@ -50,7 +50,7 @@ def init_scheduler(app):
         with app.app_context():
             scrape_all_sources()
     
-    scheduler.add_job(scrape_with_context, 'interval', days=1)
+    scheduler.add_job(scrape_with_context, 'interval', minutes=1)
     scheduler.start()
 
 def init_routes(app):
