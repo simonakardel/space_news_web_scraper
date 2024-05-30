@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-ARTICLES_PER_PAGE = 10
+ARTICLES_PER_PAGE = 9
 
 def create_app():
     """

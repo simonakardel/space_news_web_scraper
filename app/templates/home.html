@@ -41,7 +41,7 @@
             {% if current_page == 1 %}
 
                 {% if articles|length > 1 %}
-                    {% for article in articles[-4:-1] %}
+                    {% for article in articles[-3:-1] %}
                     <a class="article-link" href="{{ article.link }}" target="_blank">
                         <div class="article-card">
                             <div class="img-container"><img src="{{ article.image_url }}" alt="Article Image"></div>
@@ -70,7 +70,7 @@
         <div class="row">
             {% if current_page == 1 %}
                 {% if articles|length > 4 %}
-                    {% for article in articles[:-4]|reverse %} 
+                    {% for article in articles[:-3]|reverse %} 
                     <a class="article-link" href="{{ article.link }}" target="_blank">
                         <div class="article-card">
                             <div class="row-img-container">
