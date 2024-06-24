@@ -1,5 +1,5 @@
-from app import db 
-from app.models import Article 
+from app import db
+from app.models import Article
 
 def insert_article(title, link, summary, image_url, full_article):
     new_article = Article(
@@ -11,7 +11,6 @@ def insert_article(title, link, summary, image_url, full_article):
     )
     db.session.add(new_article)
     db.session.commit()
-
 
 def save_articles(articles):
     try:

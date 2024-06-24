@@ -12,9 +12,6 @@ load_dotenv()
 
 ARTICLES_PER_PAGE = 9
 
-db = SQLAlchemy()
-migrate = Migrate()
-
 def create_app():
     """
     Creates and configures the Flask application.
@@ -30,7 +27,7 @@ def create_app():
     app.secret_key = os.environ.get('SECRET_KEY', 'default_secret_key')
 
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate = Migrate(app, db)
 
     with app.app_context():
         db.create_all()
@@ -43,7 +40,6 @@ def create_app():
 def init_scheduler(app):
     """
     Initializes and starts the background scheduler for scraping.
-
     """
     scheduler = BackgroundScheduler(daemon=True)
 
