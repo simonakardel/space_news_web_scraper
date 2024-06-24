@@ -1,5 +1,7 @@
 from app import db
 from app.models import Article
+from sqlalchemy import cast
+from sqlalchemy.dialects.postgresql import TEXT
 
 def insert_article(title, link, summary, image_url, full_article):
     new_article = Article(
@@ -23,9 +25,10 @@ def save_articles(articles):
 
 def build_query(filter_category):
     if filter_category:
-        return Article.query.filter(Article.categories.contains(filter_category))
+        return Article.query.filter(cast(Article.categories, TEXT).like(f'%{filter_category}%'))
     else:
         return Article.query
+
 
 def paginate_query(query, page, per_page):
     return query.order_by(Article.id.desc()).paginate(page=page, per_page=per_page, error_out=False)
