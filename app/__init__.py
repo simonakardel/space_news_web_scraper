@@ -6,10 +6,14 @@ from scraper.scrapping_controller import scrape_all_sources
 import os
 from database.db_operations import build_query, paginate_query
 from dotenv import load_dotenv
+from flask_migrate import Migrate
 
 load_dotenv()
 
 ARTICLES_PER_PAGE = 9
+
+db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     """
@@ -19,12 +23,14 @@ def create_app():
         app (Flask): The Flask application instance.
     """
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///articles.db'
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///articles.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     app.secret_key = os.environ.get('SECRET_KEY', 'default_secret_key')
 
-    db.init_app(app)  
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     with app.app_context():
         db.create_all()
