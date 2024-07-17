@@ -12,6 +12,7 @@ load_dotenv()
 
 ARTICLES_PER_PAGE = 9
 
+
 def create_app():
     """
     Creates and configures the Flask application.
@@ -20,10 +21,11 @@ def create_app():
         app (Flask): The Flask application instance.
     """
     app = Flask(__name__)
-    
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///articles.db')
+
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SUPABASE_DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
+
     app.secret_key = os.environ.get('SECRET_KEY', 'default_secret_key')
 
     db.init_app(app)
@@ -37,6 +39,7 @@ def create_app():
 
     return app
 
+
 def init_scheduler(app):
     """
     Initializes and starts the background scheduler for scraping.
@@ -49,9 +52,10 @@ def init_scheduler(app):
         """
         with app.app_context():
             scrape_all_sources()
-    
+
     scheduler.add_job(scrape_with_context, 'interval', minutes=1)
     scheduler.start()
+
 
 def init_routes(app):
     """
@@ -70,17 +74,17 @@ def init_routes(app):
         """
         page = request.args.get('page', default=1, type=int)
         filter_category = request.args.get('filter')
-        
-        session_filter = session.get('filter') 
+
+        session_filter = session.get('filter')
         if filter_category and filter_category != session_filter:
-            session['filter'] = filter_category  
-            return redirect(url_for('index', filter=filter_category, page=1)) 
-        
+            session['filter'] = filter_category
+            return redirect(url_for('index', filter=filter_category, page=1))
+
         if not filter_category:
             if session_filter:
                 session.pop('filter', None)
-                return redirect(url_for('index', page=1)) 
-        
+                return redirect(url_for('index', page=1))
+
         if filter_category:
             query = build_query(filter_category)
         else:
@@ -89,9 +93,10 @@ def init_routes(app):
         articles_pagination = paginate_query(query, page, ARTICLES_PER_PAGE)
 
         articles = articles_pagination.items
-        current_page = articles_pagination.page 
-        
+        current_page = articles_pagination.page
+
         return render_template('home.html', articles=articles, pagination=articles_pagination, current_page=current_page)
+
 
 if __name__ == "__main__":
     app = create_app()
