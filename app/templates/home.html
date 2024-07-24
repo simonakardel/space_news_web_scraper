@@ -21,7 +21,7 @@
                 {% if articles %}
             <a class="article-link" href="{{ articles[-1].link }}" target="_blank">
                 <div class="article-card wide">
-                    <div><img src="{{ articles[-1].image_url }}" alt="Article Image"></div>
+                    <div><img src="{{ articles[-1].image_url }}" loading="lazy" alt="Article Image"></div>
                     <div>
                         <h2>{{ articles[-1].title }}</h2>
                         <div class="info">
@@ -45,7 +45,7 @@
                     {% for article in articles[-3:-1] %}
                     <a class="article-link" href="{{ article.link }}" target="_blank">
                         <div class="article-card">
-                            <div class="img-container"><img src="{{ article.image_url }}" alt="Article Image"></div>
+                            <div class="img-container"><img src="{{ article.image_url }}" loading="lazy" alt="Article Image"></div>
                             <div class="content">
                                 <h2>{{ article.title }}</h2>
                                 <div class="info">
@@ -75,7 +75,7 @@
                     <a class="article-link" href="{{ article.link }}" target="_blank">
                         <div class="article-card">
                             <div class="row-img-container">
-                                <img src="{{ article.image_url }}" alt="Article Image">
+                                <img src="{{ article.image_url }}" loading="lazy" alt="Article Image">
                             </div>
                             <div class="content">
                                 <h2>{{ article.title }}</h2>
@@ -94,7 +94,7 @@
                 {% for article in articles %}
                     <a class="article-link" href="{{ article.link }}" target="_blank">
                         <div class="article-card">
-                            <div class="row-img-container"><img src="{{ article.image_url }}" alt="Article Image"></div>
+                            <div class="row-img-container"><img src="{{ article.image_url }}" loading="lazy" alt="Article Image"></div>
                             <div class="content">
                                 <h2>{{ article.title }}</h2>
                                 <div class="info">
